@@ -1,0 +1,104 @@
+# Build output
+**/bin/
+**/obj/
+**/out/
+artifacts/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+# JetBrains Rider / IntelliJ
+.idea/
+*.sln.iml
+
+# Visual Studio Code local settings
+.vscode/
+
+# .NET tooling and packages
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+.dotnet/
+.tools/
+
+# Test results and code coverage
+TestResults/
+**/TestResults/
+coverage/
+coverage-*/
+*.coverage
+*.coveragexml
+*.trx
+*.lcov
+
+# Logs, diagnostics and temporary files
+logs/
+*.log
+*.tmp
+*.temp
+*.cache
+*.pid
+*.userprefs
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Machine-specific ASP.NET Core configuration
+appsettings.Development.json
+appsettings.Development.Catalog.json
+appsettings.Local.json
+appsettings.*.Local.json
+appsettings.*.local.json
+
+# Local databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Publish and deployment output
+publish/
+**/publish/
+
+# Docker local overrides
+compose.override.yaml
+compose.override.yml
+docker-compose.override.yaml
+docker-compose.override.yml
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Backup files
+*~
+*.bak
+*.orig
+*.rej
+
+# Node / Angular
+**/node_modules/
+**/dist/
+**/.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local secrets and certificates
+secrets.json
+*.pfx
+*.p12
+*.key
