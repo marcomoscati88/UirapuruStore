@@ -1,0 +1,29 @@
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" routerLink="/dashboard" aria-label="Vai alla dashboard">
+      <span class="brand-mark" aria-hidden="true">U</span>
+      <span class="brand-name">Uirapuru Store</span>
+    </a>
+  </header>
+
+  <aside class="sidebar" aria-label="Navigazione principale">
+    <nav class="sidebar-nav">
+      @for (item of menuItems; track item.path) {
+        <a
+          class="nav-item"
+          [routerLink]="item.path"
+          routerLinkActive="is-active"
+          [attr.aria-label]="item.label"
+          [attr.data-label]="item.label"
+        >
+          <i [class]="item.icon" aria-hidden="true"></i>
+          <span class="visually-hidden">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <main class="page-content">
+    <router-outlet />
+  </main>
+</div>

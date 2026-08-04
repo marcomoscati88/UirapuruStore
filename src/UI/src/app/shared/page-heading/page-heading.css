@@ -1,0 +1,12 @@
+.page-heading {
+  min-height: calc(100dvh - 144px);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #16a7c9;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
