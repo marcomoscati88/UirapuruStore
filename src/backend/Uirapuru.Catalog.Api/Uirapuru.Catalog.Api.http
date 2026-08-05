@@ -1,6 +1,10 @@
 @Uirapuru.Catalog.Api_HostAddress = http://localhost:5131
 
-GET {{Uirapuru.Catalog.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{Uirapuru.Catalog.Api_HostAddress}}/api/category/create
+Content-Type: application/json
+
+{
+  "name": "Categoria di esempio"
+}
 
 ###

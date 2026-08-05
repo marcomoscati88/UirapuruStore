@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Uirapuru.Catalog.Api.Application.Categories.Repositories;
+using Uirapuru.Catalog.Api.Application.Common.Behaviors;
+using Uirapuru.Catalog.Api.Application.Common.Persistence;
 using Uirapuru.Catalog.Api.Infrastructure.Persistence;
+using Uirapuru.Catalog.Api.Infrastructure.Persistence.Categories.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +23,18 @@ builder.Services.AddDbContext<CatalogDbContext>(options =>
 				"DbMigrationsHistory",
 				"catalog");
 		}));
+
+builder.Services.AddScoped<IUnitOfWork>(serviceProvider =>
+	serviceProvider.GetRequiredService<CatalogDbContext>());
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddMediatR(configuration =>
+{
+	configuration.RegisterServicesFromAssembly(
+		typeof(Program).Assembly);
+	configuration.AddOpenBehavior(
+		typeof(TransactionBehavior<,>));
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

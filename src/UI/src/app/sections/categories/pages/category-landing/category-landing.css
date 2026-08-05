@@ -43,7 +43,7 @@ button:focus-visible {
   position: fixed;
   z-index: 40;
   inset: 72px 0 0 auto;
-  width: 75vw;
+  width: 35vw;
   padding: 38px;
   overflow-y: auto;
   background: #fff;

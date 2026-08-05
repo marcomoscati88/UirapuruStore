@@ -1,0 +1,62 @@
+<section class="page-heading">
+  <p class="eyebrow">CREA CATEGORIA</p>
+
+  <form (ngSubmit)="onSave()">
+    <div class="form-field">
+      <div class="field-heading">
+        <label for="category-name">Nome</label>
+        <span class="character-count">
+          {{ name.value.length }} / {{ maxNameLength }}
+        </span>
+      </div>
+
+      <input
+        id="category-name"
+        name="categoryName"
+        type="text"
+        autocomplete="off"
+        [formControl]="name"
+        [maxlength]="maxNameLength"
+        [readonly]="isSaving()"
+        [attr.aria-invalid]="name.invalid && name.touched"
+        aria-describedby="category-name-message"
+      />
+
+      <div id="category-name-message" class="field-message">
+        @if (
+          name.touched &&
+          (name.hasError('required') || name.hasError('pattern'))
+        ) {
+          <span class="error">Il nome è obbligatorio.</span>
+        } @else if (name.touched && name.hasError('maxlength')) {
+          <span class="error">
+            Il nome non può superare i {{ maxNameLength }} caratteri.
+          </span>
+        }
+      </div>
+    </div>
+
+    @if (requestError()) {
+      <p class="request-error" role="alert">{{ requestError() }}</p>
+    }
+
+    @if (requestSuccess()) {
+      <p class="request-success" role="status">{{ requestSuccess() }}</p>
+    }
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="name.invalid || isSaving()">
+        {{ isSaving() ? 'SALVATAGGIO...' : 'SALVA' }}
+      </button>
+
+      <button
+        class="secondary-action"
+        type="button"
+        [disabled]="name.invalid || isSaving()"
+        (click)="onSaveAndClose()"
+      >
+        SALVA E CHIUDI
+      </button>
+    </div>
+  </form>
+</section>
