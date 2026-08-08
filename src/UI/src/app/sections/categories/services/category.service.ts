@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateCategoryCommand } from '../models/create-category-command.model';
+import {
+  CreateCategoryInput,
+  CreateCategoryResult,
+} from '../models/create-category.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +12,10 @@ import { CreateCategoryCommand } from '../models/create-category-command.model';
 export class CategoryService {
   private readonly httpClient = inject(HttpClient);
 
-  create(command: CreateCategoryCommand): Observable<void> {
-    return this.httpClient.post<void>('/api/category/create', command);
+  create(command: CreateCategoryInput): Observable<CreateCategoryResult> {
+    return this.httpClient.post<CreateCategoryResult>(
+      '/api/category/create',
+      command,
+    );
   }
 }

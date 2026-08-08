@@ -99,6 +99,7 @@ pnpm-debug.log*
 
 # Local secrets and certificates
 secrets.json
+.certs/
 *.pfx
 *.p12
 *.key

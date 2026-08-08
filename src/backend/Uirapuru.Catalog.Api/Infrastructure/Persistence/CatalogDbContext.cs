@@ -27,6 +27,7 @@ public sealed class CatalogDbContext : DbContext, IUnitOfWork
 
 	public async Task<TResponse> ExecuteInTransactionAsync<TResponse>(
 		Func<CancellationToken, Task<TResponse>> operation,
+		Func<TResponse, bool> shouldCommit,
 		CancellationToken cancellationToken = default)
 	{
 		if (Database.CurrentTransaction is not null)
@@ -41,7 +42,14 @@ public sealed class CatalogDbContext : DbContext, IUnitOfWork
 		{
 			TResponse response = await operation(cancellationToken);
 
-			await transaction.CommitAsync(cancellationToken);
+			if (shouldCommit(response))
+			{
+				await transaction.CommitAsync(cancellationToken);
+			}
+			else
+			{
+				await transaction.RollbackAsync(CancellationToken.None);
+			}
 
 			return response;
 		}

@@ -15,7 +15,7 @@ import { CategoryService } from '../../services/category.service';
 export class CategoryCreate {
   private readonly categoryService = inject(CategoryService);
 
-  readonly created = output<void>();
+  readonly savedAndClosed = output<void>();
 
   protected readonly maxNameLength = 255;
   protected readonly isSaving = signal(false);
@@ -53,9 +53,16 @@ export class CategoryCreate {
       .create({ name: this.name.value.trim() })
       .pipe(finalize(() => this.isSaving.set(false)))
       .subscribe({
-        next: () => {
+        next: (result) => {
+          if (!result.isSuccess) {
+            this.requestError.set(
+              result.errorMessage || 'Non è stato possibile creare la categoria.',
+            );
+            return;
+          }
+
           if (closeAfterSave) {
-            this.created.emit();
+            this.savedAndClosed.emit();
             return;
           }
 

@@ -1,7 +1,7 @@
 <section class="page-heading">
   <p class="eyebrow">CREA CATEGORIA</p>
 
-  <form (ngSubmit)="onSave()">
+  <form>
     <div class="form-field">
       <div class="field-heading">
         <label for="category-name">Nome</label>
@@ -45,7 +45,11 @@
     }
 
     <div class="form-actions">
-      <button type="submit" [disabled]="name.invalid || isSaving()">
+      <button
+        type="button"
+        [disabled]="name.invalid || isSaving()"
+        (click)="onSave()"
+      >
         {{ isSaving() ? 'SALVATAGGIO...' : 'SALVA' }}
       </button>
 

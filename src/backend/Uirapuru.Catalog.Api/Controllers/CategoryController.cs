@@ -15,11 +15,21 @@ public sealed class CategoryController : ControllerBase
 		_sender = sender;
 	}
 
-	[HttpPost("create")]
-	public async Task<IActionResult> Create([FromBody] CreateCategoryCommand command, CancellationToken cancellationToken)
+	[HttpGet("list")]
+	public async Task<IActionResult> List(
+	[FromBody] CreateCategoryCommand.Input command, CancellationToken cancellationToken)
 	{
-		await _sender.Send(command, cancellationToken);
+		CreateCategoryCommand.Result result = await _sender.Send(command, cancellationToken);
 
-		return Ok();
+		return Ok(result);
+	}
+
+	[HttpPost("create")]
+	public async Task<IActionResult> Create(
+		[FromBody] CreateCategoryCommand.Input command, CancellationToken cancellationToken)
+	{
+		CreateCategoryCommand.Result result = await _sender.Send(command, cancellationToken);
+
+		return Ok(result);
 	}
 }

@@ -6,7 +6,8 @@ namespace Uirapuru.Catalog.Api.Application.Common.Behaviors;
 
 public sealed class TransactionBehavior<TRequest, TResponse>
 	: IPipelineBehavior<TRequest, TResponse>
-	where TRequest : ICommand
+	where TRequest : ICommand<TResponse>
+	where TResponse : ICommandResult
 {
 	private readonly IUnitOfWork _unitOfWork;
 
@@ -25,11 +26,15 @@ public sealed class TransactionBehavior<TRequest, TResponse>
 			{
 				TResponse response = await next();
 
-				await _unitOfWork.SaveChangesAsync(
-					transactionCancellationToken);
+				if (response.IsSuccess)
+				{
+					await _unitOfWork.SaveChangesAsync(
+						transactionCancellationToken);
+				}
 
 				return response;
 			},
+			response => response.IsSuccess,
 			cancellationToken);
 	}
 }
