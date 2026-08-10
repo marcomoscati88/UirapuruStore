@@ -8,17 +8,20 @@ public sealed class Product
 
 	public string Name { get; set; } = null!;
 
-	public string Description { get; set; } = null!;
+	public string Description { get; set; }
 
-	public decimal Price { get; set; }
+	public decimal? Price { get; set; }
 
-	public CategoryID? IdCategory { get; private set; }
+	public CategoryID IdCategory { get; private set; }
 
-	public string SubCategory { get; set; } = null!;
+	public string SubCategory { get; set; }
 
 	public DateTime CreatedAtUtc { get; set; }
 
 	public DateTime? LastModifiedAtUtc { get; set; }
+	public bool IsEnabled { get; set; }
+
+	public string ImagePath { get; private set; }
 
 	private Product()
 	{
@@ -27,8 +30,8 @@ public sealed class Product
 
 	public static Product Create(string name,
 		string description,
-		decimal price,
-		CategoryID? idCategory,
+		decimal? price,
+		CategoryID idCategory,
 		string subCategory,
 		DateTime createdAtUtc,
 		DateTime? lastModified
@@ -38,13 +41,52 @@ public sealed class Product
 		{
 			Name = name,
 			Description = description,
-			Price = price,
+			Price = TruncatePrice(price),
 			IdCategory = idCategory,
 			CreatedAtUtc = createdAtUtc,
 			SubCategory = subCategory,
-			LastModifiedAtUtc = lastModified
+			LastModifiedAtUtc = lastModified,
+			IsEnabled = true
 		};
 
 		return product;
+	}
+
+	public void Update(string description,
+		decimal? price,
+		CategoryID idCategory,
+		string subCategory,
+		DateTime lastModified)
+	{
+		Description = description;
+		Price = TruncatePrice(price);
+		IdCategory = idCategory;
+		SubCategory = subCategory;
+		LastModifiedAtUtc = lastModified;
+	}
+
+	public void Enable() 
+	{
+		this.IsEnabled = true;
+	}
+
+	public void Disable()
+	{
+		this.IsEnabled = false;
+	}
+
+	public void UpdateImage(string imagePath)
+	{
+		ImagePath = imagePath;
+	}
+
+	private static decimal? TruncatePrice(decimal? price)
+	{
+		if (price == null)
+		{
+			return null;
+		}
+
+		return decimal.Truncate(price.Value * 100) / 100;
 	}
 }

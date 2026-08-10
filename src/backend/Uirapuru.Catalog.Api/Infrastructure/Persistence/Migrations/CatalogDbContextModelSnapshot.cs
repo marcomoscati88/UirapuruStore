@@ -34,6 +34,14 @@ namespace Uirapuru.Catalog.Api.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<DateTimeOffset?>("LastUpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -41,7 +49,13 @@ namespace Uirapuru.Catalog.Api.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", "catalog");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Categories", "catalog", t =>
+                        {
+                            t.HasCheckConstraint("CK_Categories_Name_NotWhiteSpace", "btrim(\"Name\") <> ''");
+                        });
                 });
 
             modelBuilder.Entity("Uirapuru.Catalog.Api.Domains.Products.Product", b =>
@@ -56,32 +70,44 @@ namespace Uirapuru.Catalog.Api.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<byte?>("IdCategory")
                         .HasColumnType("smallint");
+
+                    b.Property<string>("ImagePath")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("LastModifiedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal?>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("SubCategory")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdCategory");
 
-                    b.ToTable("Products", "catalog");
+                    b.ToTable("Products", "catalog", t =>
+                        {
+                            t.HasCheckConstraint("CK_Products_Name_NotWhiteSpace", "btrim(\"Name\") <> ''");
+                        });
                 });
 
             modelBuilder.Entity("Uirapuru.Catalog.Api.Domains.Products.Product", b =>

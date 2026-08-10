@@ -11,6 +11,74 @@
       NUOVA CATEGORIA
     </button>
   </div>
+
+  <div class="category-table-card">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="toggle-column" scope="col" aria-label="Stato"></th>
+            <th class="id-column" scope="col">ID</th>
+            <th scope="col">NOME</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (isLoading()) {
+            <tr>
+              <td class="table-state" colspan="3">
+                <span class="loading-indicator" aria-hidden="true"></span>
+                Caricamento categorie...
+              </td>
+            </tr>
+          } @else if (loadError()) {
+            <tr>
+              <td class="table-state table-error" colspan="3">
+                <span role="alert">{{ loadError() }}</span>
+              </td>
+            </tr>
+          } @else if (categories().length === 0) {
+            <tr>
+              <td class="table-state" colspan="3">
+                Nessuna categoria presente.
+              </td>
+            </tr>
+          } @else {
+            @for (category of categories(); track category.id) {
+              <tr>
+                <td class="status-cell">
+                  <button class="list-status-toggle" type="button" role="switch" [attr.aria-checked]="category.isEnabled" [attr.aria-label]="category.isEnabled ? 'Disabilita categoria ' + category.name : 'Abilita categoria ' + category.name" [disabled]="isStatusChanging(category.id)" (click)="onToggleEnabled(category)">
+                    <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                  </button>
+                </td>
+                <td class="category-cell" colspan="2">
+                  <button
+                    class="category-row-button"
+                    type="button"
+                    [attr.aria-label]="'Modifica categoria ' + category.name"
+                    (click)="openUpdatePanel(category.id)"
+                  >
+                    <span class="id-cell">{{ category.id }}</span>
+                    <span class="name-cell">{{ category.name }}</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="table-footer">
+      <span>
+        {{ categories().length }}
+        {{ categories().length === 1 ? 'categoria' : 'categorie' }}
+      </span>
+    </footer>
+  </div>
+
+  @if (statusError()) {
+    <p class="status-error" role="alert">{{ statusError() }}</p>
+  }
 </section>
 
 @if (isCreatePanelOpen()) {
@@ -36,6 +104,36 @@
       <i class="fa-solid fa-xmark" aria-hidden="true"></i>
     </button>
 
-    <app-category-create (savedAndClosed)="closeCreatePanel()" />
+    <app-category-create
+      (saved)="loadCategories()"
+      (savedAndClosed)="closeCreatePanel()"
+    ></app-category-create>
+  </aside>
+}
+
+@if (selectedCategoryId(); as idCategory) {
+  <div
+    class="panel-backdrop"
+    aria-hidden="true"
+    (click)="closeUpdatePanel()"
+  ></div>
+
+  <aside
+    id="category-update-panel"
+    class="side-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Modifica categoria"
+  >
+    <button
+      class="close-panel"
+      type="button"
+      aria-label="Chiudi pannello"
+      (click)="closeUpdatePanel()"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+
+    <app-category-update [idCategory]="idCategory" (saved)="loadCategories()"></app-category-update>
   </aside>
 }

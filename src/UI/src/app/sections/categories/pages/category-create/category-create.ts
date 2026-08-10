@@ -15,6 +15,7 @@ import { CategoryService } from '../../services/category.service';
 export class CategoryCreate {
   private readonly categoryService = inject(CategoryService);
 
+  readonly saved = output<void>();
   readonly savedAndClosed = output<void>();
 
   protected readonly maxNameLength = 255;
@@ -60,6 +61,8 @@ export class CategoryCreate {
             );
             return;
           }
+
+          this.saved.emit();
 
           if (closeAfterSave) {
             this.savedAndClosed.emit();

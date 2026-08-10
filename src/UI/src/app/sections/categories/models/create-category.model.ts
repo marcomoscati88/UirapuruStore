@@ -1,8 +1,7 @@
+import { CategoryResult } from './category.model';
+
 export interface CreateCategoryInput {
   readonly name: string;
 }
 
-export interface CreateCategoryResult {
-  readonly isSuccess: boolean;
-  readonly errorMessage: string;
-}
+export type CreateCategoryResult = CategoryResult<null>;

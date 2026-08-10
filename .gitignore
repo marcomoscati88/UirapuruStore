@@ -39,6 +39,7 @@ coverage-*/
 
 # Logs, diagnostics and temporary files
 logs/
+storage/
 *.log
 *.tmp
 *.temp

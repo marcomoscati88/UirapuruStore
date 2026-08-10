@@ -1,0 +1,71 @@
+<section class="page-heading">
+  <p class="eyebrow">CREA PRODOTTO</p>
+
+  <form>
+    <div class="form-field">
+      <div class="field-heading">
+        <label for="product-name">Nome</label>
+        <span class="character-count">{{ name.value.length }} / {{ maxNameLength }}</span>
+      </div>
+      <input id="product-name" type="text" autocomplete="off" [formControl]="name" [maxlength]="maxNameLength" [readonly]="isSaving()" [attr.aria-invalid]="name.invalid && name.touched" />
+      <div class="field-message">
+        @if (name.touched && (name.hasError('required') || name.hasError('pattern'))) {
+          <span class="error">Il nome è obbligatorio.</span>
+        } @else if (name.touched && name.hasError('maxlength')) {
+          <span class="error">Il nome non può superare i {{ maxNameLength }} caratteri.</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-field">
+      <div class="field-heading">
+        <label for="product-description">Descrizione</label>
+        <span class="character-count">{{ description.value.length }} / {{ maxDescriptionLength }}</span>
+      </div>
+      <textarea id="product-description" rows="4" [formControl]="description" [maxlength]="maxDescriptionLength" [readonly]="isSaving()"></textarea>
+      <div class="field-message">
+        @if (description.touched && description.hasError('maxlength')) {
+          <span class="error">La descrizione non può superare i {{ maxDescriptionLength }} caratteri.</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="product-price">Prezzo</label>
+        <input id="product-price" type="number" step="0.01" [formControl]="price" [readonly]="isSaving()" (blur)="truncatePrice()" />
+        <div class="field-message"></div>
+      </div>
+
+      <div class="form-field">
+        <label for="product-category">Categoria</label>
+        <app-product-category-select id="product-category" [categories]="categories()" [value]="idCategory.value" [disabled]="isSaving()" (valueChange)="idCategory.setValue($event)"></app-product-category-select>
+        <div class="field-message">
+          @if (categoryLoadError()) {
+            <span class="error">{{ categoryLoadError() }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="product-sub-category">Sotto categoria</label>
+      <input id="product-sub-category" type="text" autocomplete="off" [formControl]="subCategory" [readonly]="isSaving()" />
+      <div class="field-message">
+      </div>
+    </div>
+
+    @if (requestError()) {
+      <p class="request-error" role="alert">{{ requestError() }}</p>
+    }
+
+    @if (requestSuccess()) {
+      <p class="request-success" role="status">{{ requestSuccess() }}</p>
+    }
+
+    <div class="form-actions">
+      <button type="button" [disabled]="isFormInvalid() || isSaving()" (click)="onSave()">{{ isSaving() ? 'SALVATAGGIO...' : 'SALVA' }}</button>
+      <button class="secondary-action" type="button" [disabled]="isFormInvalid() || isSaving()" (click)="onSaveAndClose()">SALVA E CHIUDI</button>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,15 @@
+<div class="category-select" (click)="$event.stopPropagation()">
+  <button class="select-trigger" type="button" role="combobox" aria-haspopup="listbox" [attr.aria-expanded]="isOpen()" [disabled]="disabled()" (click)="toggle()" (keydown)="handleKeydown($event)">
+    <span>{{ selectedLabel() }}</span>
+    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+  </button>
+
+  @if (isOpen()) {
+    <div class="options-panel" role="listbox" aria-label="Categorie prodotto">
+      <button class="option" type="button" role="option" [attr.aria-selected]="value() === null" (click)="select(null)">Nessuna categoria</button>
+      @for (category of categories(); track category.id) {
+        <button class="option" type="button" role="option" [class.is-selected]="value() === category.id" [attr.aria-selected]="value() === category.id" (click)="select(category.id)">{{ category.name }}</button>
+      }
+    </div>
+  }
+</div>

@@ -1,12 +1,16 @@
-﻿namespace Uirapuru.Catalog.Api.Domains.Products;
+namespace Uirapuru.Catalog.Api.Domains.Products;
 
 public sealed record class ProductID
 {
 	public int Value { get; }
 
-	public ProductID(int value)
+	public ProductID(int value) : this(value, true)
 	{
-		if (value <= 0)
+	}
+
+	private ProductID(int value, bool validate)
+	{
+		if (validate && value <= 0)
 		{
 			throw new ArgumentOutOfRangeException(
 				nameof(value),
@@ -14,5 +18,10 @@ public sealed record class ProductID
 		}
 
 		Value = value;
+	}
+
+	internal static ProductID FromPersistence(int value)
+	{
+		return new ProductID(value, false);
 	}
 }

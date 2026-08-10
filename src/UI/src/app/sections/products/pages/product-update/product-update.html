@@ -1,0 +1,104 @@
+<section class="page-heading">
+  <div class="update-heading">
+    <p class="eyebrow">MODIFICA PRODOTTO</p>
+    @if (!isLoading() && !loadError()) {
+      <button class="status-toggle" type="button" role="switch" [attr.aria-checked]="isEnabled()" [attr.aria-label]="isEnabled() ? 'Disabilita prodotto' : 'Abilita prodotto'" [disabled]="isChangingStatus()" (click)="onToggleEnabled()">
+        <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+        <span class="status-label">{{ isEnabled() ? 'ATTIVO' : 'DISATTIVO' }}</span>
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="panel-state" role="status">
+      <span class="loading-indicator" aria-hidden="true"></span>
+      Caricamento prodotto...
+    </div>
+  } @else if (loadError()) {
+    <p class="panel-state error" role="alert">{{ loadError() }}</p>
+  } @else {
+    <div class="product-form">
+      <div class="form-field">
+        <div class="field-heading">
+          <label for="product-update-name">Nome</label>
+        </div>
+        <input id="product-update-name" type="text" [formControl]="name" readonly />
+        <div class="field-message">
+          @if (isEditingActive() && name.touched && (name.hasError('required') || name.hasError('pattern'))) {
+            <span class="error">Il nome è obbligatorio.</span>
+          } @else if (isEditingActive() && name.touched && name.hasError('maxlength')) {
+            <span class="error">Il nome non può superare i {{ maxNameLength }} caratteri.</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <div class="field-heading">
+          <label for="product-update-description">Descrizione</label>
+          @if (isEditingActive()) {
+            <span class="character-count">{{ description.value.length }} / {{ maxDescriptionLength }}</span>
+          }
+        </div>
+        <textarea id="product-update-description" rows="4" [formControl]="description" [maxlength]="maxDescriptionLength" [readonly]="!isEditingActive() || isSaving()"></textarea>
+        <div class="field-message">
+          @if (isEditingActive() && description.touched && description.hasError('maxlength')) {
+            <span class="error">La descrizione non può superare i {{ maxDescriptionLength }} caratteri.</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="product-update-price">Prezzo</label>
+          <input id="product-update-price" type="number" step="0.01" [formControl]="price" [readonly]="!isEditingActive() || isSaving()" (blur)="truncatePrice()" />
+          <div class="field-message"></div>
+        </div>
+
+        <div class="form-field">
+          <label for="product-update-category">Categoria</label>
+          <app-product-category-select id="product-update-category" [categories]="categories()" [value]="idCategory.value" [disabled]="!isEditingActive() || isSaving()" (valueChange)="idCategory.setValue($event)"></app-product-category-select>
+          <div class="field-message"></div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="product-update-sub-category">Sotto categoria</label>
+        <input id="product-update-sub-category" type="text" [formControl]="subCategory" [readonly]="!isEditingActive() || isSaving()" />
+        <div class="field-message">
+        </div>
+      </div>
+
+      <div class="form-field image-field">
+        <label for="product-update-image">Immagine</label>
+        @if (imagePath()) {
+          <img class="product-image" [src]="imagePath()" [alt]="'Immagine di ' + name.value" />
+        }
+        <input id="product-update-image" type="file" accept="image/jpeg,image/png,image/webp" [disabled]="!isEditingActive() || isSaving()" (change)="onImageSelected($event)" />
+        <div class="field-message">
+          @if (selectedImage()) {
+            <span>{{ selectedImage()?.name }}</span>
+          } @else if (isEditingActive()) {
+            <span>JPEG, PNG o WebP. Dimensione massima 5 MB.</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (requestError()) {
+      <p class="request-error" role="alert">{{ requestError() }}</p>
+    }
+
+    @if (requestSuccess()) {
+      <p class="request-success" role="status">{{ requestSuccess() }}</p>
+    }
+
+    <div class="form-actions">
+      @if (isEditingActive()) {
+        <button class="secondary-action" type="button" [disabled]="isSaving()" (click)="onCancel()">ANNULLA</button>
+        <button type="button" [disabled]="isFormInvalid() || isSaving()" (click)="onSave()">{{ isSaving() ? 'SALVATAGGIO...' : 'SALVA' }}</button>
+      } @else {
+        <button type="button" (click)="onEdit()">MODIFICA</button>
+      }
+    </div>
+  }
+</section>

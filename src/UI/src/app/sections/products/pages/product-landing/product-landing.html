@@ -1,5 +1,95 @@
 <section class="page-heading">
   <div class="heading-row">
     <p class="eyebrow">PRODOTTI</p>
+    <button type="button" aria-controls="product-create-panel" [attr.aria-expanded]="isCreatePanelOpen()" (click)="openCreatePanel()">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      NUOVO PRODOTTO
+    </button>
   </div>
+
+  <div class="product-table-card">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="toggle-column" scope="col" aria-label="Stato"></th>
+            <th class="id-column" scope="col">ID</th>
+            <th scope="col">NOME</th>
+            <th scope="col">PREZZO</th>
+            <th scope="col">CATEGORIA</th>
+            <th scope="col">DESCRIZIONE</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (isLoading()) {
+            <tr>
+              <td class="table-state" colspan="6">
+                <span class="loading-indicator" aria-hidden="true"></span>
+                Caricamento prodotti...
+              </td>
+            </tr>
+          } @else if (loadError()) {
+            <tr>
+              <td class="table-state table-error" colspan="6"><span role="alert">{{ loadError() }}</span></td>
+            </tr>
+          } @else if (products().length === 0) {
+            <tr>
+              <td class="table-state" colspan="6">Nessun prodotto presente.</td>
+            </tr>
+          } @else {
+            @for (product of products(); track product.id) {
+              <tr>
+                <td class="status-cell">
+                  <button class="list-status-toggle" type="button" role="switch" [attr.aria-checked]="product.isEnabled" [attr.aria-label]="product.isEnabled ? 'Disabilita prodotto ' + product.name : 'Abilita prodotto ' + product.name" [disabled]="isStatusChanging(product.id)" (click)="onToggleEnabled(product)">
+                    <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+                  </button>
+                </td>
+                <td class="product-cell" colspan="5">
+                  <button class="product-row-button" type="button" [attr.aria-label]="'Modifica prodotto ' + product.name" (click)="openUpdatePanel(product.id)">
+                    <span class="id-cell">{{ product.id }}</span>
+                    <span class="name-cell">{{ product.name }}</span>
+                    <span>{{ formatPrice(product.price) }}</span>
+                    <span>{{ categoryName(product.idCategory) }}</span>
+                    <span>{{ product.description || '—' }}</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="table-footer">
+      <span>{{ products().length }} {{ products().length === 1 ? 'prodotto' : 'prodotti' }}</span>
+    </footer>
+  </div>
+
+  @if (statusError()) {
+    <p class="status-error" role="alert">{{ statusError() }}</p>
+  }
 </section>
+
+@if (isCreatePanelOpen()) {
+  <div class="panel-backdrop" aria-hidden="true" (click)="closeCreatePanel()"></div>
+
+  <aside id="product-create-panel" class="side-panel" role="dialog" aria-modal="true" aria-label="Crea un nuovo prodotto">
+    <button class="close-panel" type="button" aria-label="Chiudi pannello" (click)="closeCreatePanel()">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+
+    <app-product-create (saved)="loadProducts()" (savedAndClosed)="closeCreatePanel()"></app-product-create>
+  </aside>
+}
+
+@if (selectedProductId(); as idProduct) {
+  <div class="panel-backdrop" aria-hidden="true" (click)="closeUpdatePanel()"></div>
+
+  <aside id="product-update-panel" class="side-panel" role="dialog" aria-modal="true" aria-label="Modifica prodotto">
+    <button class="close-panel" type="button" aria-label="Chiudi pannello" (click)="closeUpdatePanel()">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+
+    <app-product-update [idProduct]="idProduct" (saved)="loadProducts()"></app-product-update>
+  </aside>
+}

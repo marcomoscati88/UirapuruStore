@@ -11,8 +11,23 @@ public static class CreateCategoryCommand
 
 	public sealed class Result : ICommandResult
 	{
-		public bool IsSuccess { get; set; }
+		public bool IsSuccess { get; private set; }
 
-		public string ErrorMessage { get; set; } = string.Empty;
+		public string ErrorMessage { get; private set; }
+
+		public object Object { get; private set; }
+
+		public Result()
+		{
+			IsSuccess = true;
+			ErrorMessage = string.Empty;
+			Object = null;
+		}
+
+		public void SetError(string errorMessage)
+		{
+			IsSuccess = false;
+			ErrorMessage = errorMessage;
+		}
 	}
 }

@@ -16,7 +16,7 @@ public abstract class BaseRepository<TEntity, TId>
 		Entities = dbContext.Set<TEntity>();
 	}
 
-	public async Task<TEntity?> GetByIdAsync(
+	public async Task<TEntity> GetByIdAsync(
 		TId id,
 		CancellationToken cancellationToken = default)
 	{

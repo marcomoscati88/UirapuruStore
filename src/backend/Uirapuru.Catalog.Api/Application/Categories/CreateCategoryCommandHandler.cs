@@ -6,19 +6,16 @@ namespace Uirapuru.Catalog.Api.Application.Categories;
 
 public sealed class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand.Input, CreateCategoryCommand.Result>
 {
-	private readonly ICategoryRepository _categoryRepository;
+	private readonly ICategoryRepository categoryRepository;
 
 	public CreateCategoryCommandHandler(ICategoryRepository categoryRepository)
 	{
-		_categoryRepository = categoryRepository;
+		this.categoryRepository = categoryRepository;
 	}
 
 	public async Task<CreateCategoryCommand.Result> Handle(CreateCategoryCommand.Input command, CancellationToken cancellationToken)
 	{
-		CreateCategoryCommand.Result result = new()
-		{
-			IsSuccess = true
-		};
+		CreateCategoryCommand.Result result = new();
 
 		await ValidateCommand(command, result);
 
@@ -31,7 +28,7 @@ public sealed class CreateCategoryCommandHandler : IRequestHandler<CreateCategor
 			name: command.Name,
 			createdNow: DateTimeOffset.UtcNow);
 
-		await _categoryRepository.AddAsync(category, cancellationToken);
+		await categoryRepository.AddAsync(category, cancellationToken);
 
 		return result;
 	}
@@ -40,8 +37,7 @@ public sealed class CreateCategoryCommandHandler : IRequestHandler<CreateCategor
 	{
 		if (string.IsNullOrWhiteSpace(command.Name) || command.Name.Length > 255)
 		{
-			result.IsSuccess = false;
-			result.ErrorMessage = "La categoria deve avere un nome e il nome non può eccedere i 255 caratteri.";
+			result.SetError("La categoria deve avere un nome e il nome non può eccedere i 255 caratteri.");
 		}
 
 		return Task.CompletedTask;

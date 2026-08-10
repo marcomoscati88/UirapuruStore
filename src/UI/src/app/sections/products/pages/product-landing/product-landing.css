@@ -1,0 +1,288 @@
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #16a7c9;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+button:hover {
+  background: #128eac;
+}
+
+.product-table-card {
+  margin-top: 34px;
+  overflow: hidden;
+  border: 1px solid #e3e9ed;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgb(20 36 52 / 9%);
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th,
+td {
+  padding: 17px 22px;
+  border-bottom: 1px solid #e5eaed;
+  text-align: left;
+}
+
+th {
+  background: #f7f9fa;
+  color: #354957;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+th:nth-child(1) {
+  width: 72px;
+}
+
+th:nth-child(2) {
+  width: 80px;
+}
+
+th:nth-child(3) {
+  width: 25%;
+}
+
+th:nth-child(4) {
+  width: 140px;
+}
+
+th:nth-child(5) {
+  width: 22%;
+}
+
+.product-cell {
+  padding: 0;
+}
+
+.toggle-column,
+.status-cell {
+  width: 72px;
+}
+
+.status-cell {
+  padding: 0;
+  text-align: center;
+}
+
+.list-status-toggle {
+  display: inline-flex;
+  width: 44px;
+  height: 100%;
+  min-height: 54px;
+  justify-content: center;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.list-status-toggle:hover:not(:disabled) {
+  background: transparent;
+}
+
+.list-status-toggle:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.toggle-track {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: #b8c5cc;
+  transition: background-color 150ms ease;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(20 36 52 / 24%);
+  transition: transform 150ms ease;
+}
+
+.list-status-toggle[aria-checked='true'] .toggle-track {
+  background: #16a7c9;
+}
+
+.list-status-toggle[aria-checked='true'] .toggle-thumb {
+  transform: translateX(16px);
+}
+
+.product-row-button {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 80px 25% 140px 22% 1fr;
+  gap: 0;
+  padding: 17px 22px;
+  border-radius: 0;
+  background: transparent;
+  color: #526774;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.product-row-button:hover {
+  background: #f4fbfd;
+}
+
+.product-row-button:focus-visible {
+  outline: 3px solid rgb(22 167 201 / 30%);
+  outline-offset: -3px;
+}
+
+.id-cell {
+  color: #657985;
+  font-variant-numeric: tabular-nums;
+}
+
+.name-cell {
+  overflow: hidden;
+  color: #16a7c9;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-state {
+  height: 150px;
+  color: #71838f;
+  text-align: center;
+}
+
+.table-error {
+  color: #c83d3d;
+}
+
+.status-error {
+  margin: 12px 0 0;
+  color: #c83d3d;
+  font-size: 0.82rem;
+}
+
+.loading-indicator {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  margin-right: 9px;
+  border: 2px solid #d7e4e9;
+  border-top-color: #16a7c9;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+  vertical-align: -3px;
+}
+
+.table-footer {
+  display: flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 22px;
+  border-top: 1px solid #e5eaed;
+  color: #6c7e8a;
+  font-size: 0.8rem;
+}
+
+.panel-backdrop {
+  position: fixed;
+  z-index: 30;
+  inset: 72px 0 0 76px;
+  background: transparent;
+}
+
+.side-panel {
+  position: fixed;
+  z-index: 40;
+  inset: 72px 0 0 auto;
+  width: 45vw;
+  padding: 38px;
+  overflow-y: auto;
+  background: #fff;
+  box-shadow: -16px 0 40px rgb(20 36 52 / 16%);
+  animation: slide-in 240ms ease-out;
+}
+
+.close-panel {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  place-items: center;
+  border-radius: 50%;
+  background: #eef3f6;
+  color: #53697a;
+  font-size: 1rem;
+}
+
+.close-panel:hover {
+  background: #dfe8ed;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .side-panel {
+    width: calc(100vw - 76px);
+  }
+}
+
+@media (max-width: 640px) {
+  .heading-row {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .panel-backdrop {
+    inset: 64px 0 0 64px;
+  }
+
+  .side-panel {
+    top: 64px;
+    width: calc(100vw - 64px);
+    padding: 30px 24px;
+  }
+}

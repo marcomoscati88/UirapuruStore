@@ -1,9 +1,14 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Uirapuru.Catalog.Api.Application.Categories.Repositories;
 using Uirapuru.Catalog.Api.Application.Common.Behaviors;
 using Uirapuru.Catalog.Api.Application.Common.Persistence;
+using Uirapuru.Catalog.Api.Application.Products.Repositories;
+using Uirapuru.Catalog.Api.Application.Products.Storage;
 using Uirapuru.Catalog.Api.Infrastructure.Persistence;
 using Uirapuru.Catalog.Api.Infrastructure.Persistence.Categories.Repositories;
+using Uirapuru.Catalog.Api.Infrastructure.Persistence.Products.Repositories;
+using Uirapuru.Catalog.Api.Infrastructure.Storage.Products;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +32,8 @@ builder.Services.AddDbContext<CatalogDbContext>(options =>
 builder.Services.AddScoped<IUnitOfWork>(serviceProvider =>
 	serviceProvider.GetRequiredService<CatalogDbContext>());
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductImageStorage, ProductImageStorage>();
 
 builder.Services.AddMediatR(configuration =>
 {
@@ -36,11 +43,15 @@ builder.Services.AddMediatR(configuration =>
 		typeof(TransactionBehavior<,>));
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+string configuredProductImageStoragePath = builder.Configuration["ProductImages:StoragePath"];
+string productImageStoragePath = Path.IsPathRooted(configuredProductImageStoragePath) ? configuredProductImageStoragePath : Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, configuredProductImageStoragePath));
+Directory.CreateDirectory(productImageStoragePath);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -56,6 +67,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(new StaticFileOptions
+{
+	FileProvider = new PhysicalFileProvider(productImageStoragePath),
+	RequestPath = builder.Configuration["ProductImages:RequestPath"]
+});
 app.UseAuthorization();
 app.MapControllers();
 

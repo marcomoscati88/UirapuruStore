@@ -20,7 +20,21 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
 			.HasMaxLength(255)
 			.IsRequired();
 
+		builder.HasIndex(x => x.Name)
+			.IsUnique();
+
+		builder.ToTable(tableBuilder => tableBuilder.HasCheckConstraint(
+			"CK_Categories_Name_NotWhiteSpace",
+			"""btrim("Name") <> ''"""));
+
 		builder.Property(x => x.CreatedAtUtc)
+			.IsRequired();
+
+		builder.Property(x => x.LastUpdatedAtUtc)
+			.IsRequired(false);
+
+		builder.Property(x => x.IsEnabled)
+			.HasDefaultValue(true)
 			.IsRequired();
 
 		builder.Navigation(x => x.Products)

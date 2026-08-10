@@ -3,5 +3,10 @@
     "target": "https://localhost:7113",
     "secure": false,
     "changeOrigin": true
+  },
+  "/storage": {
+    "target": "https://localhost:7113",
+    "secure": false,
+    "changeOrigin": true
   }
 }

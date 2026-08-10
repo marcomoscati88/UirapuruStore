@@ -1,3 +1,77 @@
 <section class="page-heading">
-  <p class="eyebrow">MODIFICA CATEGORIA</p>
+  <div class="update-heading">
+    <p class="eyebrow">MODIFICA CATEGORIA</p>
+    @if (!isLoading() && !loadError()) {
+      <button class="status-toggle" type="button" role="switch" [attr.aria-checked]="isEnabled()" [attr.aria-label]="isEnabled() ? 'Disabilita categoria' : 'Abilita categoria'" [disabled]="isChangingStatus()" (click)="onToggleEnabled()">
+        <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+        <span class="status-label">{{ isEnabled() ? 'ATTIVA' : 'DISATTIVA' }}</span>
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="panel-state" role="status">
+      <span class="loading-indicator" aria-hidden="true"></span>
+      Caricamento categoria...
+    </div>
+  } @else if (loadError()) {
+    <p class="panel-state error" role="alert">{{ loadError() }}</p>
+  } @else {
+    <div class="form-field">
+      <div class="field-heading">
+        <label for="category-update-name">Nome</label>
+        @if (isEditingActive()) {
+          <span class="character-count">
+            {{ name.value.length }} / {{ maxNameLength }}
+          </span>
+        }
+      </div>
+      <input
+        id="category-update-name"
+        type="text"
+        [formControl]="name"
+        [maxlength]="maxNameLength"
+        [readonly]="!isEditingActive() || isSaving()"
+        [attr.aria-invalid]="name.invalid && name.touched"
+        aria-describedby="category-update-name-message"
+      />
+
+      <div id="category-update-name-message" class="field-message">
+        @if (
+          isEditingActive() &&
+          name.touched &&
+          (name.hasError('required') || name.hasError('pattern'))
+        ) {
+          <span class="error">Il nome è obbligatorio.</span>
+        } @else if (
+          isEditingActive() && name.touched && name.hasError('maxlength')
+        ) {
+          <span class="error">
+            Il nome non può superare i {{ maxNameLength }} caratteri.
+          </span>
+        }
+      </div>
+    </div>
+
+    @if (requestError()) {
+      <p class="request-error" role="alert">{{ requestError() }}</p>
+    }
+
+    @if (requestSuccess()) {
+      <p class="request-success" role="status">{{ requestSuccess() }}</p>
+    }
+
+    <div class="form-actions">
+      @if (isEditingActive()) {
+        <button class="secondary-action" type="button" [disabled]="isSaving()" (click)="onCancel()">
+          ANNULLA
+        </button>
+        <button type="button" [disabled]="name.invalid || isSaving()" (click)="onSave()">
+          {{ isSaving() ? 'SALVATAGGIO...' : 'SALVA' }}
+        </button>
+      } @else {
+        <button type="button" (click)="onEdit()">MODIFICA</button>
+      }
+    </div>
+  }
 </section>
